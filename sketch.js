@@ -6,15 +6,17 @@ let score_LEFT = 0;
 let score_RIGHT = 0;
 
 function setup() {
-  createCanvas(800, 400);
+  createCanvas(windowWidth, windowHeight);
   allPaddles.push(new Paddle(0.05*width, 0.5*height));
   allPaddles.push(new Paddle(0.95*width, 0.5*height));
 
   allBalls.push(new Ball(width/2, height/2));
+
+  allPaddles[1].auto = false;
 }
 
 function draw() {
-  background(51);
+  background(10);
   drawMiddleLine();
 
   displaySCORES();
@@ -60,14 +62,14 @@ class Ball
   {
     this.x = x;
     this.y = y;
-    this.radius = 10;
+    this.radius = 20;
     this.prev_X = this.x;
 
     this.velocity = createVector(0, 0);
     this.MAX_velocity = 50;
     this.NEG_SCALING_val = -1;
 
-    this.scale_VAL = 10;
+    this.scale_VAL = 15;
 
     // range b/w 0-1
     // scalable
@@ -84,6 +86,7 @@ class Ball
 
   update()
   {
+    this.update_COLOUR();
     this.prev_X = this.x;
     this.velocity.add(this.accerelation);
     this.accerelation.mult(0);
@@ -95,9 +98,23 @@ class Ball
 
   show()
   {
-    noFill();
-    strokeWeight(1);
+    this.update_COLOUR();
     circle(this.x, this.y, this.radius*2);
+  }
+
+  update_COLOUR()
+  {
+    if (score_RIGHT == score_LEFT) {
+      strokeWeight(1);
+      noFill();
+    }
+    else if (score_LEFT > score_RIGHT) {
+      fill(allPaddles[0].colour);
+      strokeWeight(0)
+    } else {
+      fill(allPaddles[1].colour);
+      strokeWeight(0);
+    }
   }
 
   initAcceleration(rightSide)
