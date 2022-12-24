@@ -4,6 +4,7 @@ let allBalls = [];
 
 let score_LEFT = 0;
 let score_RIGHT = 0;
+let score_GREATER = -1;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -13,6 +14,7 @@ function setup() {
   allBalls.push(new Ball(width/2, height/2));
 
   allPaddles[1].auto = false;
+  allPaddles[0].auto = false;
 }
 
 function draw() {
@@ -40,6 +42,14 @@ function displaySCORES() {
   strokeWeight(0);
   text(`${score_LEFT}`, 0.25*width, 0.1*height);
   text(`${score_RIGHT}`, 0.75*width, 0.1*height);
+  if (score_LEFT > score_RIGHT) {
+    score_GREATER = score_LEFT;
+  } else 
+  if (score_RIGHT > score_LEFT){
+    score_GREATER = score_RIGHT;
+  } else {
+    score_GREATER = -1;
+  }
 }
 
 function drawMiddleLine(val=10, skip=20) {
@@ -69,7 +79,7 @@ class Ball
     this.MAX_velocity = 50;
     this.NEG_SCALING_val = -1;
 
-    this.scale_VAL = 15;
+    this.scale_VAL = 25;
 
     // range b/w 0-1
     // scalable
@@ -90,6 +100,13 @@ class Ball
     this.prev_X = this.x;
     this.velocity.add(this.accerelation);
     this.accerelation.mult(0);
+    // this.velocity.mult(1.01)
+    if (score_GREATER % 5 == 0) {
+      this.scale_VAL += 1;
+    }
+    if (this.scale_VAL > 30) {
+      this.scale_VAL = 30;
+    }
 
     this.velocity.limit(this.MAX_velocity);
     this.x += this.velocity.x;
@@ -121,48 +138,52 @@ class Ball
   {
     // Returns a y value, either positive or negative in a certain range
     let get_YVAL;
+    let upper_VAL = 0.5;
     if (random() < 0.5) {
        // Negative Y
-       get_YVAL =  -1 * random(0.4, 1);
+       get_YVAL =  -1 * random(0.3, upper_VAL);
     } else 
     {
       // Positive Y
-      get_YVAL = random(0.4, 1);
+      get_YVAL = random(0.3, upper_VAL);
     }
 
     //Right side collision
     if (rightSide) {
       this.velocity.x *= this.NEG_SCALING_val;
       // this.velocity.mult(-1);
-      this.velocity = createVector(this.scale_VAL*random(0.4, 1.1)*(-1), this.scale_VAL * get_YVAL);
+      this.velocity = createVector(this.scale_VAL*random(0.6, 1.1)*(-1), this.scale_VAL * get_YVAL);
     } else {
       //Left Side collision
       this.velocity.x *= this.NEG_SCALING_val;
       // this.velocity.mult(-1);
-      this.velocity = createVector(this.scale_VAL*random(0.4, 1.1), this.scale_VAL * get_YVAL);
+      this.velocity = createVector(this.scale_VAL*random(0.6, 1.1), this.scale_VAL * get_YVAL);
     }
   }
 
   randomizeVelocity()
   {
     let get_YVAL;
+
+    const upperVAL = 0.5;
+    const lowerVAL = 0.3;
     if (random() < 0.5) {
        // Negative Y
-       get_YVAL =  -1 * random(0.4, 1);
+       get_YVAL =  -1 * random(lowerVAL, upperVAL);
     } else 
     {
       // Positive Y
-      get_YVAL = random(0.4, 1);
+      get_YVAL = random(lowerVAL, upperVAL);
     }
 
     let get_XVAL;
     if (random() < 0.5) {
        // Negative Y
-       get_XVAL =  -1 * random(0.4, 1);
+       get_XVAL =  -1 * random(lowerVAL, upperVAL);
     } else 
     {
       // Positive Y
-      get_XVAL = random(0.4, 1);
+      get_XVAL = random(lowerVAL, upperVAL);
     }
     this.velocity = createVector(this.scale_VAL * get_XVAL, this.scale_VAL * get_YVAL);
   }
@@ -257,7 +278,7 @@ class Paddle
   {
     this.x = x;
     this.y = y;
-    this.width = 40;
+    this.width = 20;
     this.height = 150;
     this.colour = [random(255), random(255), random(255)];
 
