@@ -14,7 +14,7 @@ function setup() {
   allBalls.push(new Ball(width/2, height/2));
 
   allPaddles[1].auto = false;
-  allPaddles[0].auto = false;
+  // allPaddles[0].auto = false;
 }
 
 function draw() {
