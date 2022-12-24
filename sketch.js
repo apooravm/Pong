@@ -32,7 +32,10 @@ function draw() {
 }
 
 function displaySCORES() {
-  textSize(16);
+  textSize(32);
+  fill(255);
+  // noStroke();
+  strokeWeight(0);
   text(`${score_LEFT}`, 0.25*width, 0.1*height);
   text(`${score_RIGHT}`, 0.75*width, 0.1*height);
 }
@@ -218,19 +221,26 @@ class Paddle
     this.x = x;
     this.y = y;
     this.width = 40;
-    this.height = 100;
+    this.height = 150;
     this.colour = [random(255), random(255), random(255)];
+
+    this.auto = true;
   }
 
   update(msY)
   {
-    this.y = msY;
+    if (this.auto) {
+      this.y = allBalls[0].y;
+    } else 
+    {
+      this.y = msY;
+    }
   }
 
   show()
   {
     fill(this.colour[0], this.colour[1], this.colour[2]);
-    strokeWeight(0.1);
+    strokeWeight(0);
     rect(this.x - this.width/2, this.y - this.height/2, this.width, this.height);
   }
 }
