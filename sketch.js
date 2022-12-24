@@ -170,13 +170,15 @@ class Ball
   collision(X_val=true, paddleYN=false, paddles=false)
   {
     if (X_val) {
-      //Right Side Collision
+      //Left Side Collision
       if (this.x + this.radius + this.MIN_wallDist > width && !this.isStuckToWallX) {
+        this.x = width - this.radius;
         this.initAcceleration(true);
         this.isStuckToWallX = true;
       }
-      //Left Side Collision
+      //Right Side Collision
       else if (this.x - this.radius - this.MIN_wallDist < 0 && !this.isStuckToWallX) {
+        this.x = 0 + this.radius;
         this.initAcceleration(false);
         this.isStuckToWallX = true;
       } else {
@@ -197,9 +199,24 @@ class Ball
       }
     }
 
-    if ((this.y + this.radius + this.MIN_wallDist > height || 
-        this.y - this.radius - this.MIN_wallDist < 0) && !this.isStuckToWallY) {
-          // Flips the y from positive => negative or vice versa
+    // if ((this.y + this.radius + this.MIN_wallDist > height || 
+    //     this.y - this.radius - this.MIN_wallDist < 0) && !this.isStuckToWallY) {
+    //       // Flips the y from positive => negative or vice versa
+    //       this.velocity.y *= this.NEG_SCALING_val;
+    //       this.isStuckToWallY = true;
+    // } else {
+    //   this.isStuckToWallY = false;
+    // }
+    
+    //Bottom Collision
+    if (this.y + this.radius + this.MIN_wallDist > height  && !this.isStuckToWallY) {
+          this.y = height - this.radius - this.MIN_wallDist;
+          this.velocity.y *= this.NEG_SCALING_val;
+          this.isStuckToWallY = true;
+    } else 
+    //Top Collision
+    if (this.y - this.radius - this.MIN_wallDist < 0 && !this.isStuckToWallY) {
+          this.y = 0 + this.radius + this.MIN_wallDist;
           this.velocity.y *= this.NEG_SCALING_val;
           this.isStuckToWallY = true;
     } else {
@@ -216,9 +233,12 @@ class Ball
             !this.isStuckToPaddle) {
           if (this.x - this.prev_X >= 0) {
             // Moving to the right/ hitting from the Right Side
+
+            this.x = paddle.x - paddle.width/2 - this.radius;
             this.initAcceleration(true);
           } else {
             // hitting from the Left Side
+            this.x = paddle.x + paddle.width/2 + this.radius;
             this.initAcceleration(false);
           }
           this.isStuckToPaddle = true;

@@ -1,2 +1,4 @@
-# Pong
-Not very good.
+# Pong 
+
+## Play
+> https://apooravm.github.io/Pong/
